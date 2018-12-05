@@ -15,33 +15,40 @@ int main()
 
     //Alphabet Generators...
     int i;
-    /*
     for(i = 97; i <= 122; i++){
         abc[i] = i;
-    }*/
+    }
 
     int j;
-    /*
     for(j = 65; j <= 90; j++){
         ABC[j] = j;
-    }*/
+    }
     //¿Cómo contar cuántas palabras tiene el archivo de texto?
     char *count = malloc(sizeof(char) * 100);
-    int c = 0;
 
     char *text = malloc(sizeof(char) * 20);
     
     //Esta wea es para almacenar todas las cadenas del texto
-    for(i = 0; i < 3; i++){
+    for(i = 0; i < 6; i++){
         fscanf(ptr_file, "%s", text);
         printf("%s",text);
     }
 
-    char *saver = malloc(sizeof(char) * 100);
     fwrite(text,sizeof(char),28,ptr_bin);
     fclose(ptr_bin);
 
+    printf("\n");
+    //Lectura e impresión desde el binario.
+    printf("Reopened from Binary");
+    printf("\n");
+    
     FILE *ptr_again = fopen("tale.dat","rb");
+    char *display = malloc(sizeof(char) * 100);
+    i = 0;
+    for(i = 0; i < 6; i++){
+        fread(display, sizeof(char),100, ptr_again);  
+        printf("%s", display); 
+    } 
     
     scanner(text, abc, ABC);
     order(text);
@@ -50,7 +57,9 @@ int main()
     free(abc);
     free(ABC);
     fclose(ptr_file);
-    fclose(ptr_bin);
+    fclose(ptr_again);
+
+    printf("\n");
 
     return 0;
 }
