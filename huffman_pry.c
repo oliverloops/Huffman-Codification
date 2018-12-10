@@ -1,130 +1,117 @@
-//Huffman Codification
+/* Codificación de Huffman by Oliver A. López Rodríguez */
+/* Proyecto de Aplicación */
+
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h> 
 #include <ctype.h>
 
-//Cálculo de la longitud del Árbol de Huffman
-#define MAX_TREE_HT 100 
+//Longitud Máxima del Árbol de Huffman
+#define MAX_LENGHT 350 
 
 //Árbol de nodos de huffman
-struct MinHeapNode { 
+struct nodoMenor { 
   
     //Caracter de Entrada 
     char data; 
   
     //Frecuencia del caracter 
-    unsigned freq; 
+    unsigned int freq; 
   
     //hijos izquierdo y derecho del nodo
-    struct MinHeapNode *left, *right; 
+    struct nodoMenor *left, *right; 
 }; 
   
 //conjunto de elementos de un solo nodo
-struct MinHeap { 
+struct nodeOne { 
   
     // Tamaño actual del cumulo
-    unsigned size; 
+    unsigned int size; 
   
-    // capidad del cumulo
-    unsigned capacity; 
+    // capacidad del cumulo
+    unsigned int capacity; 
   
     // Arreglo de los apuntadores del cumulo en el nodo.
-    struct MinHeapNode** array; 
+    struct nodoMenor** array; 
 }; 
   
-/*A utility function allocate a new 
-función para almacenar un nuevo nodo 
-de un cumulo a partir de caracteres dados
+/* Función para almacenar un nuevo nodo 
+de cumulos a partir de caracteres dados
 y la frecuencia de cada caracter. */
-struct MinHeapNode* newNode(char data, unsigned freq) 
+struct nodoMenor* newNode(char data, unsigned freq) 
 { 
-    struct MinHeapNode* temp 
-        = (struct MinHeapNode*)malloc
-(sizeof(struct MinHeapNode)); 
+    struct nodoMenor* temp  = (struct nodoMenor*)malloc(sizeof(struct nodoMenor)); 
   
-    temp->left = temp->right = NULL; 
-    temp->data = data; 
-    temp->freq = freq; 
+  //Si almacena un valor a la izquierda, devuelve nada a la derecha.
+    temp-> left = temp-> right = NULL; 
+    temp-> data = data; 
+    temp-> freq = freq; 
   
     return temp; 
 } 
   
-/* Una utilidad de la función para crear 
+/* Función para crear 
 un cumulo dada una capacidad */
-struct MinHeap* createMinHeap(unsigned capacity) 
+struct nodeOne* createMinHeap(unsigned capacity) 
   
 { 
-  
-    struct MinHeap* minHeap 
-        = (struct MinHeap*)malloc(sizeof(struct MinHeap)); 
+	//Apuntador de estructura para llenar un arreglo de apuntadores
+    struct nodeOne* minHeap = (struct nodeOne*)malloc(sizeof(struct nodeOne)); 
   
     // El tamaño actual es 0 
-    minHeap->size = 0; 
+    minHeap-> size = 0; 
   
-    minHeap->capacity = capacity; 
+    minHeap-> capacity = capacity; 
   
-    minHeap->array 
-        = (struct MinHeapNode**)malloc(minHeap-> 
-capacity * sizeof(struct MinHeapNode*)); 
+    minHeap-> array = (struct nodoMenor**)malloc(minHeap-> capacity * sizeof(struct nodoMenor*)); 
     return minHeap; 
 } 
   
-/* A utility function to 
-Una función para cambiar 2 nodos del cumulo */
-void swapMinHeapNode(struct MinHeapNode** a, 
-                     struct MinHeapNode** b) 
-  
+/* Una función para cambiar 2 nodos del cumulo */
+void swapMinHeapNode(struct nodoMenor** a, struct nodoMenor** b) 
 { 
-  
-    struct MinHeapNode* t = *a; 
+    struct nodoMenor* t = *a; 
     *a = *b; 
     *b = t; 
 } 
   
-/* Función standar que recibe las frecuencias y el tamaño
+/* Función estándar que recibe las frecuencias y el tamaño
 de los cumulos */
-void minHeapify(struct MinHeap* minHeap, int idx) 
+void minHeapify(struct nodeOne* minHeap, int val) 
   
 { 
-	int smallest = idx; 
-    int left = 2 * idx + 1; 
-    int right = 2 * idx + 2; 
+	int smallest = val; 
+    int left = 2 * val + 1; 
+    int right = 2 * val + 2; 
   
-    if (left < minHeap->size && minHeap->array[left]-> 
-freq < minHeap->array[smallest]->freq) 
+    if (left < minHeap->size && minHeap->array[left]-> freq < minHeap->array[smallest]->freq) 
         smallest = left; 
   
-    if (right < minHeap->size && minHeap->array[right]-> 
-freq < minHeap->array[smallest]->freq) 
+    if (right < minHeap->size && minHeap->array[right]-> freq < minHeap->array[smallest]->freq) 
         smallest = right; 
   
-    if (smallest != idx) { 
-        swapMinHeapNode(&minHeap->array[smallest], 
-                        &minHeap->array[idx]); 
-        minHeapify(minHeap, smallest); 
+    if (smallest != val) { 
+        swapMinHeapNode(&minHeap->array[smallest], &minHeap->array[val]); 
+		minHeapify(minHeap, smallest); 
     } 
 } 
   
 /*
 Una función para revisar si el tamaño 
 de cumulo es 1 o no*/
-int isSizeOne(struct MinHeap* minHeap) 
+int isSizeOne(struct nodeOne* minHeap) 
 { 
   
     return (minHeap->size == 1); 
 } 
   
-/* Una función standar para extraer el valor
+/* Una función estándar para extraer el valor
 mínimo del nodo a partir del cumulo */
-struct MinHeapNode* extractMin(struct MinHeap* minHeap) 
-  
+struct nodoMenor* extractMin(struct nodeOne* minHeap)  
 { 
   
-    struct MinHeapNode* temp = minHeap->array[0]; 
-    minHeap->array[0] 
-        = minHeap->array[minHeap->size - 1]; 
-  
+    struct nodoMenor* temp = minHeap->array[0]; 
+    minHeap->array[0] = minHeap->array[minHeap->size - 1]; 
     --minHeap->size; 
     minHeapify(minHeap, 0); 
   
@@ -133,11 +120,8 @@ struct MinHeapNode* extractMin(struct MinHeap* minHeap)
   
 /*Una función para insertar un nuevo
 nodo en el cumulo */
-void insertMinHeap(struct MinHeap* minHeap, 
-                   struct MinHeapNode* minHeapNode) 
-  
+void insertMinHeap(struct nodeOne* minHeap, struct  nodoMenor* minHeapNode)  
 { 
-  
     ++minHeap->size; 
     int i = minHeap->size - 1; 
   
@@ -151,10 +135,8 @@ void insertMinHeap(struct MinHeap* minHeap,
 } 
   
 //Una función standar para construir un nodo
-void buildMinHeap(struct MinHeap* minHeap) 
-  
+void buildMinHeap(struct nodeOne* minHeap) 
 { 
-  
     int n = minHeap->size - 1; 
     int i; 
   
@@ -173,24 +155,19 @@ void printArr(int arr[], int n)
 } 
   
 //Función para revisar si un nodo es ya una hoja
-int isLeaf(struct MinHeapNode* root) 
-  
+int isLeaf(struct nodoMenor* root)  
 { 
-  
     return !(root->left) && !(root->right); 
 } 
   
-/* Creates a min heap of capacity 
+/*
 crea un cumulo de capacidad igual al tamaño
-// equal to size and inserts all character of 
 de insersión de todos los caracteres de data[]
 en el cumulo. Al principio el tamaño (size) del cumulo
 es igual a la variable capacity. */
-struct MinHeap* createAndBuildMinHeap(char data[], int freq[], int size) 
-  
+struct nodeOne* createAndBuildMinHeap(char data[], int freq[], int size) 
 { 
-  
-    struct MinHeap* minHeap = createMinHeap(size); 
+    struct nodeOne* minHeap = createMinHeap(size); 
   
     for (int i = 0; i < size; ++i) 
         minHeap->array[i] = newNode(data[i], freq[i]); 
@@ -202,28 +179,28 @@ struct MinHeap* createAndBuildMinHeap(char data[], int freq[], int size)
 } 
   
 // Función principal que contruye el árbol de huffman 
-struct MinHeapNode* buildHuffmanTree(char data[], int freq[], int size) 
+struct nodoMenor* buildHuffmanTree(char data[], int freq[], int size) 
   
 { 
-    struct MinHeapNode *left, *right, *top; 
+    struct nodoMenor *left, *right, *top; 
   
     /*Paso 1: Crea un cumulo de capacidad igual a "size",
 	inicialmente hay node igual a "size"*/
-    struct MinHeap* minHeap = createAndBuildMinHeap(data, freq, size); 
+    struct nodeOne* minHeap = createAndBuildMinHeap(data, freq, size); 
   
-    // Itera mientras el tamaño del cumulo no sea 1 
+    // Se itera mientras el tamaño del cumulo no sea 1 
     while (!isSizeOne(minHeap)) { 
   
-        /* Paso 2: Extrae las frecuncias
+        /* Paso 2: Se extrae las frecuncias
         más pequeñas del cumulo */
         left = extractMin(minHeap); 
         right = extractMin(minHeap); 
   
-        /* Paso 3: Crea un nuevo nodo interno
-        con frecuencia igual a la sumo de los
-        2 nodos de frecuencias, Haz los 2 nodos
+        /* Paso 3: Se crea un nuevo nodo interno
+        con frecuencia igual a la suma de los
+        2 nodos de frecuencias, los 2 nodos se hacen
         que se extraegan hijos izquierdo y derecho
-		de este nuevo nodo. Añade este nodo al cumulo
+		de este nuevo nodo. Se añade este nodo al cumulo
 		El simbolo $ estaba en documentación*/
         top = newNode('$', left->freq + right->freq); 
   
@@ -239,10 +216,8 @@ struct MinHeapNode* buildHuffmanTree(char data[], int freq[], int size)
 } 
   
 // Imprime la codificación desde la raíz del árbol de Huffman
-void printCodes(struct MinHeapNode* root, int arr[], int top) 
-  
+void printCodes(struct nodoMenor* root, int arr[], int top) 
 { 
-  
     // Asigna 0 a un brazo (izquierdo)
     if (root->left) { 
   
@@ -263,24 +238,22 @@ void printCodes(struct MinHeapNode* root, int arr[], int top)
     y su codificación desde:  arr[] */
     if (isLeaf(root)) { 
   
-        printf("%c: ", root->data); 
+        printf("El caracter %c ahora es -> ", root->data); 
         printArr(arr, top); 
     } 
 } 
   
-/* The main function that builds a 
-Función principal que construye el Árbol de huffman
+/* Función principal que construye el Árbol de huffman
 e imprime las codificaciones */
 void HuffmanCodes(char data[], int freq[], int size) 
   
 { 
     //Contruye el Árbol de Huffman
-    struct MinHeapNode* root 
-        = buildHuffmanTree(data, freq, size); 
+    struct nodoMenor* root = buildHuffmanTree(data, freq, size); 
   
     /*Imprime las codificaciones usando 
     el árbol construido anteriormente */
-    int arr[MAX_TREE_HT];
+    int arr[MAX_LENGHT];
 	int top = 0; 
   
     printCodes(root, arr, top); 
@@ -328,10 +301,13 @@ int main()
         if(total != 0){
 			freq[i] = total;
 			new_data[beta] = abc[i];
+			printf("| %c | frecuencia: %d ",new_data[beta],freq[i]);
 			beta++;
 		}
 		total = 0;
     }
+
+	printf("\n\n\n");
 
 	//Invocación a la función que contruye el arbol de nodos.
 	HuffmanCodes(new_data, freq, beta); 
