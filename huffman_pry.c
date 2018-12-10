@@ -311,28 +311,35 @@ int main()
         ABC[b] = b;
     }
 
-    int *freq = malloc(sizeof(int) * 25); i = 0;
-    for(i = 0; i < 25; i++){
+	char *new_data = malloc(sizeof(char) * 25);
+    int *freq = malloc(sizeof(int) * 25), beta = 0; i = 0;
+    for(i = 0; i <= 25; i++){
         for(j = 0; j < count; j++){
             if(abc[i] == text[j]){
                 total += 1;
-            }
+				new_data[] = abc[i]; //I need to store the frequencies.
+			}
         }
         printf("%d ", total);
         freq[i] = total;
+		total = 0;
+		beta++;
     }
+
+	printf("\n");
 
 	//char arr[] = { 'o', 'l', 'i', 'v', 'e', 'r'}; 
 	//int freq[] = { 2, 1, 3, 7, 5, 1}; 
 
-	int size = sizeof(abc) / sizeof(abc[0]); 
+	int size = sizeof(new_data) / sizeof(new_data[0]); 
 
-	HuffmanCodes(abc, freq, size); 
+	HuffmanCodes(new_data, freq, size); 
 
     free(text);
     free(abc);
     free(ABC);
     free(freq);
+	free(new_data);
     fclose(ptr_file);
 
     printf("\n");
