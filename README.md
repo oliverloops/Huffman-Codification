@@ -1,4 +1,4 @@
-# Algoritmo de Huffman
+# Algoritmo de Huffman :three:
 Algoritmo Básico de Codificación de Huffman :rage1:
 
 #### Instrucciones: 
